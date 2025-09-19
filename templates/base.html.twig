@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>{% block title %}CRUDcroustillant{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="{{ path('homepage') }}">Accueil</a>
-            <a href="{{ path('burgers_list') }}">Liste des Burgers</a>
-        </nav>
-    </header>
+    {% include '_header.html.twig' %}
 
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    {% include '_footer.html.twig' %}
 </body>
 </html>
