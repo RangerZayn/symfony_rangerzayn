@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Accueil</title>
+    <meta charset="utf-8">
+    <title>{% block title %}CRUDcroustillant{% endblock %}</title>
 </head>
 <body>
-    <h1>Bienvenue sur CRUDcroustillant !</h1>
-    <!-- L’URL / à la fin du lien affiche la page d’accueil via HomeController::index() et le template home.html.twig. -->
+    <header>
+        <nav>
+            <a href="{{ path('homepage') }}">Accueil</a>
+            <a href="{{ path('burgers_list') }}">Liste des Burgers</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>
-

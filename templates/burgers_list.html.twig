@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Burgers</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Burgers - CRUDcroustillant{% endblock %}
+
+{% block content %}
     <h1>Liste des burgers</h1>
-    <!-- L’URL /burgers à la fin du lien affiche la liste des burgers via BurgerController::list() et le template burgers_list.html.twig. -->
-</body>
-</html>
+{% endblock %}
