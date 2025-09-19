@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Détail du burger - CRUDcroustillant
+{% endblock %}
+
+{% block content %}
+    {% if burger %}
+        <h1>{{ burger.nom }}</h1>
+        <p>{{ burger.description }}</p>
+        <p>ID du burger : {{ id }}</p>
+    {% else %}
+        <h1>Burger non trouvé</h1>
+        <p>Aucun burger avec l'ID {{ id }}.</p>
+    {% endif %}
+{% endblock %}
