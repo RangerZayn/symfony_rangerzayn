@@ -2,33 +2,32 @@
 
 namespace App\Controller;
 
+use App\Entity\Burger;
+use App\Entity\Pain;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BurgerController extends AbstractController
 {
-    #[Route('/burgers', name: 'burgers_list')]
-    public function list(): Response
+    #[Route('/burger/create', name: 'burger_create')]
+    public function create(EntityManagerInterface $entityManager): Response
     {
-        return $this->render('burgers_list.html.twig');
+        // Récupération d'un Pain existant, ici avec l'ID = 1
+        $pain = $entityManager->getRepository(Pain::class)->find(1);
+        if (!$pain) {
+            return new Response('Pain introuvable, créez-en un d’abord.', 404);
+        }
+
+        $burger = new Burger();
+        $burger->setName('Krabby Patty');
+        $burger->setPrice(4.99);
+
+        $entityManager->persist($burger);
+        $entityManager->flush();
+
+        return new Response('Burger créé avec succès !');
     }
 
-    #[Route('/burger/{id}', name: 'burger_show')]
-    public function show(int $id): Response
-    {
-        // Simulation d'une liste de burgers
-        $burgers = [
-            1 => ['nom' => 'Burger Classique', 'description' => 'Pain, viande, salade, tomate, sauce.'],
-            2 => ['nom' => 'Burger Végétarien', 'description' => 'Pain, galette végétale, salade, tomate, sauce.'],
-            3 => ['nom' => 'Burger BBQ', 'description' => 'Pain, viande, oignons frits, sauce BBQ.'],
-        ];
-
-        $burger = $burgers[$id] ?? null;
-
-        return $this->render('burger_show.html.twig', [
-            'id' => $id,
-            'burger' => $burger,
-        ]);
-    }
 }
