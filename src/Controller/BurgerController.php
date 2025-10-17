@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Burger;
 use App\Entity\Pain;
+use App\Repository\BurgerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class BurgerController extends AbstractController
 {
     #[Route('/burger', name: 'burger_index')]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(BurgerRepository $burgerRepository): Response
     {
-        $burgers = $entityManager->getRepository(Burger::class)->findAll();
+        $burgers = $burgerRepository->findAll();
 
         return $this->render('burgers_list.html.twig', [
             'burgers' => $burgers,
@@ -40,4 +41,23 @@ class BurgerController extends AbstractController
         return new Response('Burger créé avec succès !');
     }
 
+    #[Route('/burger/ingredient/{ingredient}', name: 'burger_by_ingredient')]
+    public function findByIngredient(string $ingredient, BurgerRepository $burgerRepository): Response
+    {
+        $burgers = $burgerRepository->findBurgersWithIngredient($ingredient);
+
+        return $this->render('burgers_list.html.twig', [
+            'burgers' => $burgers,
+        ]);
+    }
+
+    #[Route('/burger/top/{limit}', name: 'burger_top')]
+    public function topBurgers(int $limit, BurgerRepository $burgerRepository): Response
+    {
+        $burgers = $burgerRepository->findTopXBurgers($limit);
+
+        return $this->render('burgers_list.html.twig', [
+            'burgers' => $burgers,
+        ]);
+    }
 }

@@ -9,11 +9,26 @@
             {% for burger in burgers %}
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        <img src="{{ '/images/' ~ burger.image.name }}" class="card-img-top" alt="{{ burger.name }}">
+                        <img src="/images/{{ burger.image.name }}" class="card-img-top" alt="{{ burger.name }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ burger.name }}</h5>
                             <p class="card-text">{{ burger.price }} €</p>
-                            <img src="{{ asset('BurgerBBQ.jpg') }}" alt="Burger BBQ Deluxe">
+                            <p class="card-text"><strong>Pain:</strong> {{ burger.pain.name }}</p>
+                            <p class="card-text"><strong>Oignons:</strong> 
+                                {% for oignon in burger.oignons %}
+                                    {{ oignon.name }}{% if not loop.last %}, {% endif %}
+                                {% else %}
+                                    Aucun
+                                {% endfor %}
+                            </p>
+                            <p class="card-text"><strong>Sauces:</strong> 
+                                {% for sauce in burger.sauces %}
+                                    {{ sauce.name }}{% if not loop.last %}, {% endif %}
+                                {% else %}
+                                    Aucune
+                                {% endfor %}
+                            </p>
+                            <a href="#" class="btn btn-primary">Voir le burger</a>
                         </div>
                     </div>
                 </div>

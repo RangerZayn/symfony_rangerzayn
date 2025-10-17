@@ -15,47 +15,160 @@ class BurgerFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Création d’un pain
-        $pain = new Pain();
-        $pain->setName('Pain brioché');
-        $manager->persist($pain);
+        // Pains
+        $pain1 = new Pain();
+        $pain1->setName('Pain brioché');
+        $manager->persist($pain1);
+        $this->addReference('pain_1', $pain1);
 
-        // Création d’un oignon
-        $oignon = new Oignon();
-        $oignon->setName('Oignon rouge');
-        $manager->persist($oignon);
+        $pain2 = new Pain();
+        $pain2->setName('Pain aux sésames');
+        $manager->persist($pain2);
+        $this->addReference('pain_2', $pain2);
 
-        // Création d’une sauce
-        $sauce = new Sauce();
-        $sauce->setName('Sauce BBQ');
-        $manager->persist($sauce);
+        $pain3 = new Pain();
+        $pain3->setName('Pain complet');
+        $manager->persist($pain3);
+        $this->addReference('pain_3', $pain3);
 
-        // Création d’une image
-        $image = new Image();
-        $image->setName('burger1.jpg');
-        $manager->persist($image);
+        // Oignons
+        $oignon1 = new Oignon();
+        $oignon1->setName('Oignon rouge');
+        $manager->persist($oignon1);
+        $this->addReference('oignon_1', $oignon1);
 
-        // Création d’un commentaire
-        $commentaire = new Commentaire();
-        $commentaire->setName('Délicieux burger, à recommander !');
-        // La liaison au burger sera ajoutée après la création du burger
+        $oignon2 = new Oignon();
+        $oignon2->setName('Oignon caramélisé');
+        $manager->persist($oignon2);
+        $this->addReference('oignon_2', $oignon2);
 
-        // Création du burger
-        $burger = new Burger();
-        $burger->setName('Burger BBQ Deluxe');
-        $burger->setPrice('12.99');
-        $burger->setPain($pain);
-        $burger->addOignon($oignon);
-        $burger->addSauce($sauce);
-        $burger->setImage($image);
+        $oignon3 = new Oignon();
+        $oignon3->setName('Oignon frit');
+        $manager->persist($oignon3);
+        $this->addReference('oignon_3', $oignon3);
 
-        $manager->persist($burger);
+        // Sauces
+        $sauce1 = new Sauce();
+        $sauce1->setName('Sauce BBQ');
+        $manager->persist($sauce1);
+        $this->addReference('sauce_1', $sauce1);
 
-        // Liaison du commentaire au burger
-        $commentaire->setBurger($burger);
-        $manager->persist($commentaire);
+        $sauce2 = new Sauce();
+        $sauce2->setName('Sauce Ketchup');
+        $manager->persist($sauce2);
+        $this->addReference('sauce_2', $sauce2);
 
-        // Sauvegarde en base
+        $sauce3 = new Sauce();
+        $sauce3->setName('Sauce Mayonnaise');
+        $manager->persist($sauce3);
+        $this->addReference('sauce_3', $sauce3);
+
+        // Images
+        $image1 = new Image();
+        $image1->setName('burger1.jpg');
+        $manager->persist($image1);
+        $this->addReference('image_1', $image1);
+
+        $image2 = new Image();
+        $image2->setName('burger2.jpg');
+        $manager->persist($image2);
+        $this->addReference('image_2', $image2);
+
+        $image3 = new Image();
+        $image3->setName('burger3.jpg');
+        $manager->persist($image3);
+        $this->addReference('image_3', $image3);
+        
+        $image4 = new Image();
+        $image4->setName('burger4.jpg');
+        $manager->persist($image4);
+        $this->addReference('image_4', $image4);
+
+        $image5 = new Image();
+        $image5->setName('burger5.jpg');
+        $manager->persist($image5);
+        $this->addReference('image_5', $image5);
+
+        $image6 = new Image();
+        $image6->setName('burger6.jpg');
+        $manager->persist($image6);
+        $this->addReference('image_6', $image6);
+
+
+        $burgersData = [
+            [
+                'name' => 'Burger BBQ Deluxe',
+                'price' => 12.99,
+                'pain' => 'pain_1',
+                'oignons' => ['oignon_1', 'oignon_2'],
+                'sauces' => ['sauce_1'],
+                'image' => 'image_1'
+            ],
+            [
+                'name' => 'Le Classique',
+                'price' => 9.99,
+                'pain' => 'pain_2',
+                'oignons' => ['oignon_1'],
+                'sauces' => ['sauce_2', 'sauce_3'],
+                'image' => 'image_2'
+            ],
+            [
+                'name' => 'Le Complet',
+                'price' => 11.50,
+                'pain' => 'pain_3',
+                'oignons' => ['oignon_3'],
+                'sauces' => ['sauce_3'],
+                'image' => 'image_3'
+            ],
+            [
+                'name' => 'Le Double Cheese',
+                'price' => 14.50,
+                'pain' => 'pain_2',
+                'oignons' => [],
+                'sauces' => ['sauce_2'],
+                'image' => 'image_4'
+            ],
+            [
+                'name' => 'Le Veggie',
+                'price' => 10.99,
+                'pain' => 'pain_3',
+                'oignons' => ['oignon_1', 'oignon_2', 'oignon_3'],
+                'sauces' => [],
+                'image' => 'image_5'
+            ],
+            [
+                'name' => 'Le Piquant',
+                'price' => 13.99,
+                'pain' => 'pain_1',
+                'oignons' => ['oignon_1', 'oignon_3'],
+                'sauces' => ['sauce_1'],
+                'image' => 'image_6'
+            ]
+        ];
+
+        foreach ($burgersData as $burgerData) {
+            $burger = new Burger();
+            $burger->setName($burgerData['name']);
+            $burger->setPrice($burgerData['price']);
+            $burger->setPain($this->getReference($burgerData['pain'], Pain::class));
+
+            foreach ($burgerData['oignons'] as $oignonRef) {
+                $burger->addOignon($this->getReference($oignonRef, Oignon::class));
+            }
+
+            foreach ($burgerData['sauces'] as $sauceRef) {
+                $burger->addSauce($this->getReference($sauceRef, Sauce::class));
+            }
+
+            $burger->setImage($this->getReference($burgerData['image'], Image::class));
+            $manager->persist($burger);
+            
+            $commentaire = new Commentaire();
+            $commentaire->setName('Super burger ' . $burger->getName());
+            $commentaire->setBurger($burger);
+            $manager->persist($commentaire);
+        }
+
         $manager->flush();
     }
 }
