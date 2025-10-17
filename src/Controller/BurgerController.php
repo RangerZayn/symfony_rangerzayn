@@ -11,6 +11,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BurgerController extends AbstractController
 {
+    #[Route('/burger', name: 'burger_index')]
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        $burgers = $entityManager->getRepository(Burger::class)->findAll();
+
+        return $this->render('burgers_list.html.twig', [
+            'burgers' => $burgers,
+        ]);
+    }
+
     #[Route('/burger/create', name: 'burger_create')]
     public function create(EntityManagerInterface $entityManager): Response
     {

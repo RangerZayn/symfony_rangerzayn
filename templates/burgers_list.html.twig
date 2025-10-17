@@ -3,6 +3,21 @@
 {% block title %}Liste des Burgers - CRUDcroustillant{% endblock %}
 
 {% block content %}
-    <h2>Liste des burgers</h2>
-    <p>Nos burgers sont préparés avec soin et passion.</p>
+    <div class="container">
+        <h2 class="text-center my-4">Liste des burgers</h2>
+        <div class="row">
+            {% for burger in burgers %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="{{ '/images/' ~ burger.image.name }}" class="card-img-top" alt="{{ burger.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ burger.name }}</h5>
+                            <p class="card-text">{{ burger.price }} €</p>
+                            <img src="{{ asset('BurgerBBQ.jpg') }}" alt="Burger BBQ Deluxe">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

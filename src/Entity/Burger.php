@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -32,13 +34,20 @@ class Burger
     private $sauces;
 
     // Relation OneToOne avec Image (une seule image par burger)
-    #[ORM\OneToOne(targetEntity: Image::class)]
+    #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private $image;
 
     // Relation OneToMany avec Commentaire (plusieurs commentaires pour un burger)
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'burger')]
     private $commentaires;
+
+    public function __construct()
+    {
+        $this->oignons = new ArrayCollection();
+        $this->sauces = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -80,24 +89,46 @@ class Burger
         $this->pain = $pain;
     }
 
-    public function getOignons(): array
+    public function getOignons(): Collection
     {
         return $this->oignons;
     }
 
-    public function setOignons(array $oignons): void
+    public function addOignon(Oignon $oignon): self
     {
-        $this->oignons = $oignons;
+        if (!$this->oignons->contains($oignon)) {
+            $this->oignons[] = $oignon;
+        }
+
+        return $this; 
     }
 
-    public function getSauces(): array
+    public function removeOignon(Oignon $oignon): self
+    {
+        $this->oignons->removeElement($oignon);
+
+        return $this;
+    }
+
+    public function getSauces(): Collection
     {
         return $this->sauces;
     }
 
-    public function setSauces(array $sauces): void
+    public function addSauce(Sauce $sauce): self
     {
-        $this->sauces = $sauces;
+        if (!$this->sauces->contains($sauce)) {
+            $this->sauces[] = $sauce;
+        }
+
+        return $this;
+    }
+
+    public function removeSauce(Sauce $sauce): self
+    {
+        $this->sauces->removeElement($sauce);
+
+        return $this;
     }
 
     public function getImage(): Image
@@ -109,13 +140,31 @@ class Burger
     {
         $this->image = $image;
     }
-    public function getCommentaires(): array
+
+    public function getCommentaires(): Collection
     {
         return $this->commentaires;
     }
 
-    public function setCommentaires(array $commentaires): void
+    public function addCommentaire(Commentaire $commentaire): self
     {
-        $this->commentaires = $commentaires;
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setBurger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getBurger() === $this) {
+                $commentaire->setBurger(null);
+            }
+        }
+
+        return $this;
     }
 }
